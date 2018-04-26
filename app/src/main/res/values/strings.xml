@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- App and Activities -->
+    <string name="app_name">Chatty</string>
+    <string name="title_activity_view_image">View image</string>
+    <string name="title_activity_chat">Chatroom</string>
+    <string name="title_activity_record_audio">Record audio</string>
+    <string name="title_activity_play_video">Play video</string>
+    <string name="title_activity_file_picker">File chooser</string>
+    <string name="title_activity_web_view">Open link....</string>
+    <string name="title_activity_drawing">Draw</string>
+
+    <!-- Menus -->
+    <string name="disconnect">Disconnect</string>
+    <string name="send_image">Send image</string>
+    <string name="download_image">Download image</string>
+    <string name="send_audio">Send audio message</string>
+    <string name="send_video">Send video message</string>
+    <string name="send_file">Send file</string>
+    <string name="send_drawing">Send drawing</string>
+
+    <!-- Popup menus -->
+    <string name="pick_image">Pick image</string>
+    <string name="take_photo">Take photo</string>
+
+    <!-- Buttons -->
+    <string name="go_to_settings_button">Go to Settings</string>
+    <string name="send_button">Send</string>
+    <string name="back_button">Back</string>
+    <string name="record_button">Start recording</string>
+    <string name="playback_button">Play</string>
+    <string name="stop_recording_button">Stop recording</string>
+    <string name="ok">OK</string>
+
+    <!-- TextView -->
+    <string name="go_to_settings_text">Click the image above to go to Settings and connect your device to others by Wifi-Direct</string>
+
+    <!-- EditTexts -->
+    <string name="set_chat_name">Please choose your chat name</string>
+    <string name="enter_text">Enter your message here</string>
+
+    <!-- Descriptions -->
+    <string name="full_screen_image">Full screen image</string>
+    <string name="file_icon">File icon</string>    
+    <string name="paint">Choose a color</string>    
+    <string name="small">Small</string>
+    <string name="medium">Medium</string>
+    <string name="large">Large</string>
+    
+    <!-- Drawing buttons -->
+    <string name="new_drawing">New</string>
+    <string name="brush">Brush</string>
+    <string name="eraser">Eraser</string>
+    <string name="save_and_send">Save and Send</string>
+
+</resources>

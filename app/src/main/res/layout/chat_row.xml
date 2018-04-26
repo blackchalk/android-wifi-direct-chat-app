@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent" >
+    
+    <RelativeLayout 
+        android:id="@+id/relativeLayout"
+        android:layout_width="wrap_content"
+	   	android:layout_height="wrap_content"
+	   	android:background="@drawable/chat_bubble"
+	   	android:layout_alignParentLeft="true"
+	   	android:layout_margin="10dp" >
+        
+        <TextView 
+	        android:id="@+id/chatName"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"        
+	        android:textStyle="bold"
+	        android:maxLines="1" 
+	    	android:maxLength="20"
+	    	android:textColor="@color/chat_text"
+	    	android:layout_centerHorizontal="true"
+	    	android:longClickable="true" />        
+	    
+	    <TextView 
+	        android:id="@+id/text"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@id/chatName" 
+	        android:textColor="@color/chat_text"
+	        android:layout_marginTop="10dp"
+	        android:longClickable="true" />
+	    
+	    <com.android.chatty.CustomViews.DynamicImageView
+	        android:id="@+id/image"
+	        android:layout_below="@id/text"
+	        android:layout_width="180dp"
+	        android:layout_height="wrap_content"
+	        android:scaleType="fitCenter"
+	        android:layout_marginTop="10dp"
+	        android:longClickable="true" />
+	    
+	    <ImageView
+	        android:id="@+id/playAudio"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:contentDescription="@string/playback_button"
+	        android:layout_below="@id/image"
+	        android:src="@drawable/play_audio"
+	        android:longClickable="true" />
+	    
+	    <RelativeLayout 
+	        android:id="@+id/videoMessage"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@id/playAudio">
+	        
+	        <com.android.chatty.CustomViews.DynamicImageView
+		        android:id="@+id/playVideo"
+		        android:layout_width="180dp"
+		        android:layout_height="wrap_content"
+		        android:scaleType="fitCenter"
+		        android:contentDescription="@string/playback_button"	        
+		        android:longClickable="true"
+		        android:layout_marginTop="10dp" />
+	        
+	        <ImageView 
+	            android:id="@+id/buttonPlayVideo"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_centerInParent="true"
+	            android:src="@drawable/play_video_button"
+	            android:contentDescription="@string/playback_button"
+	            android:longClickable="true"/>
+	        
+	    </RelativeLayout>
+	    
+	    <RelativeLayout
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@id/videoMessage" >
+	        
+	        <ImageView
+	            android:id="@+id/file_attached_icon"
+	            android:layout_width="wrap_content"
+	            android:layout_height="80dp"
+	            android:longClickable="true"
+	            android:src="@drawable/file_attached"
+	            android:contentDescription="@string/file_icon"/>
+	        
+	        <TextView 
+		        android:id="@+id/fileSaved"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"	        
+		        android:longClickable="true"
+		        android:layout_centerVertical="true"
+		        android:layout_toRightOf="@id/file_attached_icon" />
+	        
+	    </RelativeLayout>
+	    
+    </RelativeLayout>   
+    
+    <View
+        android:id="@+id/underline"
+		android:layout_height="0.5dp"
+		android:layout_width="wrap_content"
+		android:layout_alignLeft="@id/relativeLayout"
+		android:layout_alignRight="@id/relativeLayout"
+		android:background="@color/chat_text"
+		android:layout_marginTop="38dp"
+		android:layout_marginLeft="10dp"
+		android:layout_marginRight="10dp" />
+
+</RelativeLayout>
