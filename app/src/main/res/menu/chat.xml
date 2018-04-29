@@ -7,31 +7,31 @@
     <item
         android:id="@+id/send_image"
         android:title="@string/send_image"
-        android:showAsAction="ifRoom"
-        android:icon="@drawable/ic_action_picture" />
+        android:icon="@drawable/ic_action_picture"
+        app:showAsAction="ifRoom" />
     
     <item
         android:id="@+id/send_file"
         android:title="@string/send_file"
-        android:showAsAction="ifRoom"
-        android:icon="@drawable/ic_action_attachment" />
-    
-    <item 
+        android:icon="@drawable/ic_action_attachment"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/send_audio"
         android:title="@string/send_audio"
-        android:showAsAction="ifRoom"
-        android:icon="@drawable/ic_action_mic" />
-    
-	<item 
+        android:icon="@drawable/ic_action_mic"
+        app:showAsAction="ifRoom" />
+
+	<item
         android:id="@+id/send_video"
         android:title="@string/send_video"
-        android:showAsAction="ifRoom"
-        android:icon="@drawable/ic_action_video" />
-	
-	<item 
+        android:icon="@drawable/ic_action_video"
+        app:showAsAction="ifRoom" />
+
+	<item
 	    android:id="@+id/send_drawing"
 	    android:title="@string/send_drawing"
-	    android:showAsAction="ifRoom"
-	    android:icon="@drawable/ic_action_edit"/>
+        android:icon="@drawable/ic_action_edit"
+        app:showAsAction="ifRoom" />
 
 </menu>

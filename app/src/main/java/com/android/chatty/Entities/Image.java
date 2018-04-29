@@ -27,7 +27,7 @@ public class Image {
 	
 	//Retrieve the bitmap from its Uri (in sample size calculated)
 	public Bitmap getBitmapFromUri() {
-		Log.v(TAG, "Decode image to bitmap");
+		Log.e(TAG, "Decode image to bitmap");
 		Bitmap myBitmap = decodeSampledBitmapFromUrl(450, 450);
 		return myBitmap;
 	}

@@ -1,28 +1,41 @@
 package com.android.chatty;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -48,6 +61,9 @@ import com.android.chatty.Receivers.WifiDirectBroadcastReceiver;
 import com.android.chatty.util.ActivityUtilities;
 import com.android.chatty.util.FileUtilities;
 
+import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
+import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+
 public class ChatActivity extends Activity {
 	private static final String TAG = "ChatActivity";	
 	private static final int PICK_IMAGE = 1;
@@ -61,6 +77,7 @@ public class ChatActivity extends Activity {
 	private static final int DOWNLOAD_FILE = 102;
 	private static final int COPY_TEXT = 103;
 	private static final int SHARE_TEXT = 104;
+	private static final int REQUEST_PERMISSIONS_REQUIRED = 7;
 	
 	private WifiP2pManager mManager;
 	private Channel mChannel;
@@ -73,7 +90,7 @@ public class ChatActivity extends Activity {
 	private Uri fileUri;
 	private String fileURL;
 	private ArrayList<Uri> tmpFilesUri;
-	
+	private Uri mPhotoUri;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +101,19 @@ public class ChatActivity extends Activity {
         mChannel = mManager.initialize(this, getMainLooper(), null);
         mReceiver = WifiDirectBroadcastReceiver.createInstance();
         mReceiver.setmActivity(this);
+		//ignores file uri exposure - issues with capture image bug
+//		StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+//		StrictMode.setVmPolicy(builder.build());
+		String[] PERMISSIONS = {
+				Manifest.permission.CAMERA,
+				Manifest.permission.READ_EXTERNAL_STORAGE,
+				Manifest.permission.WRITE_EXTERNAL_STORAGE,
+				Manifest.permission.RECORD_AUDIO
+		};
+
+		if(!hasPermissions(this, PERMISSIONS)){
+			ActivityCompat.requestPermissions(this, PERMISSIONS, REQUEST_PERMISSIONS_REQUIRED);
+		}
         
         mIntentFilter = new IntentFilter();
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
@@ -122,6 +152,17 @@ public class ChatActivity extends Activity {
         
         //Register the context menu to the list view (for pop up menu)
         registerForContextMenu(listView);
+	}
+
+	public static boolean hasPermissions(Context context, String... permissions) {
+		if (context != null && permissions != null) {
+			for (String permission : permissions) {
+				if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
 	@Override
@@ -193,6 +234,7 @@ public class ChatActivity extends Activity {
     
     @Override
 	protected void onDestroy() {
+		super.onDestroy();
 		super.onStop();
 		clearTmpFiles(getExternalFilesDir(null));
 	}
@@ -201,21 +243,52 @@ public class ChatActivity extends Activity {
     @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
+		Log.e(TAG,"requestCode:"+requestCode);
+//		Log.e(TAG,"data:"+data.getData());
+		Log.e(TAG,"resultCode:"+resultCode);
 		switch(requestCode){
+
 			case PICK_IMAGE:
 				if (resultCode == RESULT_OK && data.getData() != null) {
 					fileUri = data.getData();
-					sendMessage(Message.IMAGE_MESSAGE);					
+					sendMessage(Message.IMAGE_MESSAGE);
+					Log.e(TAG,"kak1:"+fileUri);
 				}
 				break;
 			case TAKE_PHOTO:
-				if (resultCode == RESULT_OK && data.getData() != null) {
-					fileUri = data.getData();
-					sendMessage(Message.IMAGE_MESSAGE);
-					tmpFilesUri.add(fileUri);
+//				if (resultCode == RESULT_OK && data.getData() != null) {
+//					fileUri = data.getData();
+//					Log.e(TAG,"kak2:"+fileUri);
+//					sendMessage(Message.IMAGE_MESSAGE);
+//					tmpFilesUri.add(fileUri);
+//					Log.e(TAG,"kak2:"+tmpFilesUri);}
+
+				if (resultCode == RESULT_OK) {
+					// Image saved to a generated MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+//					String[] projection = {
+//							MediaStore.MediaColumns._ID,
+//							MediaStore.Images.ImageColumns.ORIENTATION,
+//							MediaStore.Images.Media.DATA
+//					};
+
+//					Cursor c = getContentResolver().query(mPhotoUri, projection, null, null, null);
+//					if (c != null && c.getCount()>0) {
+//						c.moveToFirst();
+//						String photoFileName = c.getString(c.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+
+						fileUri = mPhotoUri;
+						sendMessage(Message.IMAGE_MESSAGE);
+						tmpFilesUri.add(fileUri);
+//					}
+//					c.close();
+
+				} else if (resultCode == RESULT_CANCELED) {
+					// User cancelled the image capture
+				} else {
+					// Image capture failed, advise user
 				}
-				break;
+
+		break;
 			case RECORD_AUDIO:
 				if (resultCode == RESULT_OK) {
 					fileURL = (String) data.getStringExtra("audioPath");
@@ -243,6 +316,19 @@ public class ChatActivity extends Activity {
 				break;
 		}
 	}
+	public Uri getImageUri(Context inContext, Bitmap inImage) {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+		String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+		return Uri.parse(path);
+	}
+
+	public String getRealPathFromURI(Uri uri) {
+		Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+		cursor.moveToFirst();
+		int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+		return cursor.getString(idx);
+	}
 	
 	// Hydrate Message object then launch the AsyncTasks to send it
 	public void sendMessage(int type){
@@ -253,11 +339,12 @@ public class ChatActivity extends Activity {
 		switch(type){
 			case Message.IMAGE_MESSAGE:
 				Image image = new Image(this, fileUri);
-				Log.v(TAG, "Bitmap from url ok");
-				mes.setByteArray(image.bitmapToByteArray(image.getBitmapFromUri()));				
-				mes.setFileName(image.getFileName());
-				mes.setFileSize(image.getFileSize());				
-				Log.v(TAG, "Set byte array to image ok");
+				Log.e(TAG, "Bitmap from url ok" + fileUri);
+					mes.setByteArray(image.bitmapToByteArray(image.getBitmapFromUri()));
+					mes.setFileName(image.getFileName());
+					mes.setFileSize(image.getFileSize());
+					Log.e(TAG, "Set byte array to image ok"+image.getFileSize()+"-"+image.getFileName());
+
 				break;
 			case Message.AUDIO_MESSAGE:
 				MediaFile audioFile = new MediaFile(this, fileURL, Message.AUDIO_MESSAGE);
@@ -284,15 +371,15 @@ public class ChatActivity extends Activity {
 				mes.setFilePath(drawingFile.getFilePath());
 				break;
 		}		
-		Log.v(TAG, "Message object hydrated");
+		Log.e(TAG, "Message object hydrated");
 		
-		Log.v(TAG, "Start AsyncTasks to send the message");
+		Log.e(TAG, "Start AsyncTasks to send the message");
 		if(mReceiver.isGroupeOwner() == WifiDirectBroadcastReceiver.IS_OWNER){
-			Log.v(TAG, "Message hydrated, start SendMessageServer AsyncTask");
+			Log.e(TAG, "Message hydrated, start SendMessageServer AsyncTask");
 			new SendMessageServer(ChatActivity.this, true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mes);
 		}
 		else if(mReceiver.isGroupeOwner() == WifiDirectBroadcastReceiver.IS_CLIENT){
-			Log.v(TAG, "Message hydrated, start SendMessageClient AsyncTask");
+			Log.e(TAG, "Message hydrated, start SendMessageClient AsyncTask");
 			new SendMessageClient(ChatActivity.this, mReceiver.getOwnerAddr()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mes);
 		}		
 		
@@ -341,7 +428,7 @@ public class ChatActivity extends Activity {
 	        	Log.v(TAG, "Start activity to record audio");
 	        	startActivityForResult(new Intent(this, RecordAudioActivity.class), RECORD_AUDIO);
 	        	return true;
-	        	
+
 	        case R.id.send_video:
 	        	Log.v(TAG, "Start activity to record video");
 	        	Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
@@ -350,13 +437,13 @@ public class ChatActivity extends Activity {
 	                startActivityForResult(takeVideoIntent, RECORD_VIDEO);
 	            }
 	        	return true;
-	        	
+
 	        case R.id.send_file:
 	        	Log.v(TAG, "Start activity to choose file");
 	        	Intent chooseFileIntent = new Intent(this, FilePickerActivity.class);
 	        	startActivityForResult(chooseFileIntent, CHOOSE_FILE);
 	        	return true;
-	        	
+
 	        case R.id.send_drawing:
 	        	Log.v(TAG, "Start activity to draw");
 	        	Intent drawIntent = new Intent(this, DrawingActivity.class);
@@ -377,7 +464,7 @@ public class ChatActivity extends Activity {
 			public boolean onMenuItemClick(MenuItem item) {
 				switch(item.getItemId()){
 				case R.id.pick_image:
-					Log.v(TAG, "Pick an image");
+					Log.e(TAG, "Pick an image");
 					Intent intent = new Intent(Intent.ACTION_PICK);
 					intent.setType("image/*");
 					intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -389,13 +476,22 @@ public class ChatActivity extends Activity {
 					break;
 				
 				case R.id.take_photo:
-					Log.v(TAG, "Take a photo");
-					Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-					
-					if (intent2.resolveActivity(getPackageManager()) != null) {
-						startActivityForResult(intent2, TAKE_PHOTO);
-				    }				    
-				    break;
+					Log.e(TAG, "Take a photo");
+//					Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//
+//					if (intent2.resolveActivity(getPackageManager()) != null) {
+//						startActivityForResult(intent2, TAKE_PHOTO);
+//				    }
+
+					// Alternative strategy of generating a content URI using the MediaStore
+					// This way seems to work very reliably
+
+					mPhotoUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new ContentValues());
+					Intent intent4 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+					intent4.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
+					startActivityForResult(intent4, TAKE_PHOTO);
+
+					break;
 				}
 				return true;
 			}
@@ -541,4 +637,43 @@ public class ChatActivity extends Activity {
     	    	startActivity(sendIntent);
     	}    	
     }
+
+	/** Create a File for saving an image or video */
+	private static File getOutputMediaFile(int type){
+		// To be safe, you should check that the SDCard is mounted
+		// using Environment.getExternalStorageState() before doing this.
+
+		File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+				Environment.DIRECTORY_PICTURES), "MyCameraApp");
+		// This location works best if you want the created images to be shared
+		// between applications and persist after your app has been uninstalled.
+
+		// Create the storage directory if it does not exist
+		if (! mediaStorageDir.exists()){
+			if (! mediaStorageDir.mkdirs()){
+				Log.d("MyCameraApp", "failed to create directory");
+				return null;
+			}
+		}
+
+		// Create a media file name
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		File mediaFile;
+		if (type == MEDIA_TYPE_IMAGE){
+			mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+					"IMG_"+ timeStamp + ".jpg");
+		} else if(type == MEDIA_TYPE_VIDEO) {
+			mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+					"VID_"+ timeStamp + ".mp4");
+		} else {
+			return null;
+		}
+
+		return mediaFile;
+	}
+
+	/** Create a file Uri for saving an image or video */
+	private static Uri getOutputMediaFileUri(int type){
+		return Uri.fromFile(getOutputMediaFile(type));
+	}
 }

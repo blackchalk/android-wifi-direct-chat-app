@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -40,8 +41,8 @@ public class FilePickerActivity extends ListActivity{
 		setTitle(file.getName());
 		
 		//Retrieve all files in this directory
-		File[] dirs = file.listFiles();		
-		
+		File[] dirs = file.listFiles();
+
 		//List of directories
 		List<Item> directories = new ArrayList<Item>();
 		//List if files

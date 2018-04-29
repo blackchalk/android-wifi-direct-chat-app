@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="${packageName}.${activityClass}"
+    tools:context="com.android.chatty.DrawingActivity"
     android:background="@color/gray" >
     
     <LinearLayout 

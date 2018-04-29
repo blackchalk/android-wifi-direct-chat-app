@@ -9,6 +9,7 @@ import android.content.SharedPreferences.Editor;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
@@ -66,7 +67,9 @@ public class MainActivity extends Activity{
         
         //Init the Channel, Intent filter and Broadcast receiver
         init();
-        
+        //ignores file uri exposure - issues with capture image bug
+//		StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+//		StrictMode.setVmPolicy(builder.build());
         //Button Go to Settings
         goToSettings = (ImageView) findViewById(R.id.goToSettings);
         goToSettings();
@@ -196,6 +199,7 @@ public class MainActivity extends Activity{
 			
 			@Override
 			public void onClick(View arg0) {
+
 				//Open Wifi settings
 		        startActivityForResult(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS), 0);
 			}
