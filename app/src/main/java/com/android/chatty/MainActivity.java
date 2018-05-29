@@ -67,27 +67,25 @@ public class MainActivity extends Activity{
         
         //Init the Channel, Intent filter and Broadcast receiver
         init();
-        //ignores file uri exposure - issues with capture image bug
-//		StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-//		StrictMode.setVmPolicy(builder.build());
+
         //Button Go to Settings
-        goToSettings = (ImageView) findViewById(R.id.goToSettings);
+        goToSettings = findViewById(R.id.goToSettings);
         goToSettings();
         
         //Go to Settings text
-        goToSettingsText = (TextView) findViewById(R.id.textGoToSettings);        
+        goToSettingsText = findViewById(R.id.textGoToSettings);
         
         //Button Go to Chat
-        goToChat = (Button) findViewById(R.id.goToChat);
+        goToChat = findViewById(R.id.goToChat);
         goToChat();
         
         //Set the chat name
-        setChatName = (EditText) findViewById(R.id.setChatName);
-        setChatNameLabel = (TextView) findViewById(R.id.setChatNameLabel);
+        setChatName = findViewById(R.id.setChatName);
+        setChatNameLabel = findViewById(R.id.setChatNameLabel);
         setChatName.setText(loadChatName(this));
         
         //Button Disconnect
-        disconnect = (ImageView) findViewById(R.id.disconnect);
+        disconnect = findViewById(R.id.disconnect);
         disconnect();
     }	
 

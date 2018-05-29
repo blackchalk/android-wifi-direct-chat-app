@@ -63,7 +63,6 @@ public class SendMessageServer extends AsyncTask<Message, Message, Message>{
 			
 		} catch (IOException e) {
 			e.printStackTrace();
-			Log.e(TAG, "Erreur d'envoie du message");
 		}
 		
 		return msg[0];
