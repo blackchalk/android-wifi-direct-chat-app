@@ -138,6 +138,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
 			((MainActivity)mActivity).getDisconnect().setVisibility(View.VISIBLE);
 			((MainActivity)mActivity).getGoToSettings().setVisibility(View.GONE);
 			((MainActivity)mActivity).getGoToSettingsText().setVisibility(View.GONE);
+			//// TODO: 06/06/2018 get owneraddress and pass it to main
 		}
 	}
 

@@ -10,8 +10,10 @@ import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.ThumbnailUtils;
+import android.os.Debug;
 import android.provider.MediaStore.Images.Thumbnails;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +22,13 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.chatty.ChatActivity;
+import com.android.chatty.InitThreads.ServerInit;
+import com.android.chatty.MainActivity;
 import com.android.chatty.PlayVideoActivity;
 import com.android.chatty.R;
 import com.android.chatty.ViewImageActivity;
@@ -31,6 +36,7 @@ import com.android.chatty.Entities.Message;
 import com.android.chatty.util.FileUtilities;
 
 public class ChatAdapter extends BaseAdapter {
+	public static String TAG = "ChatAdapter";
 	private List<Message> listMessage;
 	private LayoutInflater inflater;
 	public static Bitmap bitmap;
@@ -80,14 +86,41 @@ public class ChatAdapter extends BaseAdapter {
             cache.fileSaved = (TextView) view.findViewById(R.id.fileSaved);
             cache.videoPlayerButton = (ImageView) view.findViewById(R.id.buttonPlayVideo);
             cache.fileSavedIcon = (ImageView) view.findViewById(R.id.file_attached_icon);
+            //
+			cache.llt_chatinfo = view.findViewById(R.id.lltrow_path);
+			cache.tv_path = view.findViewById(R.id.tvrow_path);
 	            
 			view.setTag(cache);
 		}
-		
+
 		//Retrive the items from cache
-        CacheView cache = (CacheView) view.getTag();
+        final CacheView cache = (CacheView) view.getTag();
         cache.chatName.setText(listMessage.get(position).getChatName());
         cache.chatName.setTag(cache);
+        //path:\tserver->\t127.0.0.1\npath:\tserver->\t127.0.0.1\npath:\tserver->\t127.0.0.1
+        try {
+        	cache.tv_path.setText("");
+			String foo = "";
+//			Log.e(TAG,"asd:"+ServerInit.listOfClientsTheServerIsSending.size());
+
+			if (!listMessage.get(position).isMine()){
+//				Log.e(TAG, "getView: "+listMessage.get(position).getSenderAddress().getHostAddress());
+				for (String x : MainActivity.groupdlistAddress){
+					foo += "path:\tserver-> " + x + "\n";
+				}
+        	}
+//        	else{
+//					String s = MainActivity.loadChatName(mContext);
+//					foo += "path:\t"+s+"-> server("+ MainActivity.groupdlistAddress.get(0)+")\n";
+//			}
+
+			cache.tv_path.setText(foo);
+
+		}catch (NullPointerException e){
+        	e.printStackTrace();
+		}
+
+
         cache.chatName.setOnLongClickListener(new OnLongClickListener() {
 			
 			@Override
@@ -95,6 +128,18 @@ public class ChatAdapter extends BaseAdapter {
 				CacheView cache = (CacheView) v.getTag();
 				((ChatActivity)mContext).talkTo((String) cache.chatName.getText());
 				return true;
+			}
+		});
+
+        cache.chatName.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				//chat info
+				if (cache.llt_chatinfo.getVisibility() == View.GONE){
+					cache.llt_chatinfo.setVisibility(View.VISIBLE);
+				}else{
+					cache.llt_chatinfo.setVisibility(View.GONE);
+				}
 			}
 		});
         
@@ -285,5 +330,8 @@ public class ChatAdapter extends BaseAdapter {
 		public ImageView videoPlayerButton;
 		public ImageView fileSavedIcon;
 		public TextView fileSaved;
+		//
+		public LinearLayout llt_chatinfo;
+		public TextView tv_path;
 	}
 }

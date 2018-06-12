@@ -387,7 +387,8 @@ public class ChatActivity extends Activity {
 		Log.v(TAG, "Refresh message list starts");
 
 		message.setMine(isMine);
-		Log.e(TAG, "refreshList: message is from :"+message.getSenderAddress().getHostAddress() );
+//		Log.e(TAG, "refreshList: message is from :"+message.getSenderAddress().getHostAddress() );
+//		Log.e(TAG, "refreshList: message is from :"+isMine );
 		listMessage.add(message);
     	chatAdapter.notifyDataSetChanged();
 

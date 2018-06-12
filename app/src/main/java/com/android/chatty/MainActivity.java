@@ -27,6 +27,8 @@ import com.android.chatty.InitThreads.ServerInit;
 import com.android.chatty.Receivers.WifiDirectBroadcastReceiver;
 import com.android.chatty.util.ActivityUtilities;
 
+import java.util.ArrayList;
+
 /*
  * This activity is the launcher activity. 
  * Once the connection established, the ChatActivity is launched.
@@ -46,6 +48,7 @@ public class MainActivity extends Activity{
 	private ImageView disconnect;
 	public static String chatName;
 	public static ServerInit server;
+	public static ArrayList<String> groupdlistAddress;
 
 	//Getters and Setters
     public WifiP2pManager getmManager() { return mManager; }
@@ -213,7 +216,7 @@ public class MainActivity extends Activity{
   	}
 
   	//Retrieve the chat name from SharedPreferences
-  	public String loadChatName(Context context) {
+  	public static String loadChatName(Context context) {
   		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
   		return prefs.getString("chatName", DEFAULT_CHAT_NAME);
   	}

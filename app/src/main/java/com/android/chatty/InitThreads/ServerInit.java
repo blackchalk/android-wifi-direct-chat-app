@@ -8,12 +8,13 @@ import java.util.ArrayList;
 
 import android.util.Log;
 
+import com.android.chatty.MainActivity;
+
 public class ServerInit extends Thread{
 	private static final String TAG = "ServerInit";
-	private static final int SERVER_PORT = 4444;
+	private static final int SERVER_PORT = 8888;
 	public static ArrayList<InetAddress> clients;
 	private ServerSocket serverSocket;
-	
 	public ServerInit(){
 		clients = new ArrayList<InetAddress>();
 	}
@@ -21,7 +22,7 @@ public class ServerInit extends Thread{
 	@Override
 	public void run() {
 		clients.clear();
-	    
+		MainActivity.groupdlistAddress.clear();
 		try {
 			serverSocket = new ServerSocket(SERVER_PORT);
 			// Collect client ip's
@@ -29,9 +30,10 @@ public class ServerInit extends Thread{
 		       Socket clientSocket = serverSocket.accept();
 		       if(!clients.contains(clientSocket.getInetAddress())){
 		    	   clients.add(clientSocket.getInetAddress());
+				   MainActivity.groupdlistAddress.add(clientSocket.getInetAddress().getHostAddress());
 		    	   Log.v(TAG, "New client: " + clientSocket.getInetAddress().getHostAddress());
-		       }		       
-		       
+		       }
+
 		       clientSocket.close();
 		    }
 		} catch (IOException e) {

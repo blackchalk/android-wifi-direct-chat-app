@@ -25,6 +25,7 @@ public class SendMessageServer extends AsyncTask<Message, Message, Message>{
 	private static final int SERVER_PORT = 4446;
 	private boolean isMine;
 
+
 	public SendMessageServer(Context context, boolean mine){
 		mContext = context;
 		isMine = mine;
@@ -40,6 +41,7 @@ public class SendMessageServer extends AsyncTask<Message, Message, Message>{
 		//Send the message to clients
 		try {			
 			ArrayList<InetAddress> listClients = ServerInit.clients;
+			Log.e(TAG, "doInBackground: number of clients: "+ listClients.size() +" ");
 			for(InetAddress addr : listClients){
 				
 				if(msg[0].getSenderAddress()!=null && addr.getHostAddress().equals(msg[0].getSenderAddress().getHostAddress())){
@@ -49,15 +51,15 @@ public class SendMessageServer extends AsyncTask<Message, Message, Message>{
 				Socket socket = new Socket();
 				socket.setReuseAddress(true);
 				socket.bind(null);
-				Log.v(TAG,"Connect to client: " + addr.getHostAddress());
+				Log.e(TAG,"Connect to client: " + addr.getHostAddress());
 				socket.connect(new InetSocketAddress(addr, SERVER_PORT));
-				Log.v(TAG, "doInBackground: connect to "+ addr.getHostAddress() +" succeeded");
-				
+				Log.e(TAG, "doInBackground: connect to "+ addr.getHostAddress() +" succeeded");
+
 				OutputStream outputStream = socket.getOutputStream();
 				
 				new ObjectOutputStream(outputStream).writeObject(msg[0]);
 				
-			    Log.v(TAG, "doInBackground: write to "+ addr.getHostAddress() +" succeeded");
+			    Log.e(TAG, "doInBackground: write to "+ addr.getHostAddress() +" succeeded");
 			    socket.close();
 			}
 			
