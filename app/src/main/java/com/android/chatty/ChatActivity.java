@@ -139,7 +139,7 @@ public class ChatActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				if(!edit.getText().toString().equals("")){
-					Log.v(TAG, "Send message");
+//					Log.v(TAG, "Send message");
 					sendMessage(Message.TEXT_MESSAGE);
 				}
 				else{
@@ -248,7 +248,7 @@ public class ChatActivity extends Activity {
 				if (resultCode == RESULT_OK && data.getData() != null) {
 					fileUri = data.getData();
 					sendMessage(Message.IMAGE_MESSAGE);
-					Log.e(TAG,"kak1:"+fileUri);
+//					Log.e(TAG,"kak1:"+fileUri);
 				}
 				break;
 			case TAKE_PHOTO:
@@ -328,7 +328,7 @@ public class ChatActivity extends Activity {
 
 	// Hydrate Message object then launch the AsyncTasks to send it
 	public void sendMessage(int type){
-		Log.v(TAG, "Send message starts");
+//		Log.v(TAG, "Send message starts");
 		// Message written in EditText is always sent
 		Message mes = new Message(type, edit.getText().toString(), null, MainActivity.chatName);
 
@@ -367,15 +367,22 @@ public class ChatActivity extends Activity {
 				mes.setFilePath(drawingFile.getFilePath());
 				break;
 		}
-		Log.e(TAG, "Message object hydrated");
+//		Log.e(TAG, "Message object hydrated");
 
-		Log.e(TAG, "Start AsyncTasks to send the message");
+		// First cycle in tracking where this msg goes.
+		// MARK: 16/06/2018 Once msg instantiated, get and records user chat name.
+		mes.setUser_record(MainActivity.loadChatName(this));
+
+//		Log.e(TAG, "Start AsyncTasks to send the message");
+
 		if(mReceiver.isGroupeOwner() == WifiDirectBroadcastReceiver.IS_OWNER){
 			Log.e(TAG, "Message hydrated, start SendMessageServer AsyncTask");
+
 			new SendMessageServer(ChatActivity.this, true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mes);
 		}
 		else if(mReceiver.isGroupeOwner() == WifiDirectBroadcastReceiver.IS_CLIENT){
 			Log.e(TAG, "Message hydrated, start SendMessageClient AsyncTask");
+
 			new SendMessageClient(ChatActivity.this, mReceiver.getOwnerAddr()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mes);
 		}
 
@@ -384,7 +391,7 @@ public class ChatActivity extends Activity {
 
 	// Refresh the message list
 	public static void refreshList(Message message, boolean isMine){
-		Log.v(TAG, "Refresh message list starts");
+//		Log.v(TAG, "Refresh message list starts");
 
 		message.setMine(isMine);
 //		Log.e(TAG, "refreshList: message is from :"+message.getSenderAddress().getHostAddress() );
@@ -392,7 +399,7 @@ public class ChatActivity extends Activity {
 		listMessage.add(message);
     	chatAdapter.notifyDataSetChanged();
 
-    	Log.v(TAG, "Chat Adapter notified of the changes");
+//    	Log.v(TAG, "Chat Adapter notified of the changes");
 
     	//Scroll to the last element of the list
     	listView.setSelection(listMessage.size() - 1);

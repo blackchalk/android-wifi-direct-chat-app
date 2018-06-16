@@ -48,7 +48,6 @@ public class MainActivity extends Activity{
 	private ImageView disconnect;
 	public static String chatName;
 	public static ServerInit server;
-	public static ArrayList<String> groupdlistAddress;
 
 	//Getters and Setters
     public WifiP2pManager getmManager() { return mManager; }

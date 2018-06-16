@@ -97,30 +97,20 @@ public class ChatAdapter extends BaseAdapter {
         final CacheView cache = (CacheView) view.getTag();
         cache.chatName.setText(listMessage.get(position).getChatName());
         cache.chatName.setTag(cache);
-        //path:\tserver->\t127.0.0.1\npath:\tserver->\t127.0.0.1\npath:\tserver->\t127.0.0.1
-        try {
-        	cache.tv_path.setText("");
-			String foo = "";
-//			Log.e(TAG,"asd:"+ServerInit.listOfClientsTheServerIsSending.size());
 
-			if (!listMessage.get(position).isMine()){
-//				Log.e(TAG, "getView: "+listMessage.get(position).getSenderAddress().getHostAddress());
-				for (String x : MainActivity.groupdlistAddress){
-					foo += "path:\tserver-> " + x + "\n";
-				}
-        	}
-//        	else{
-//					String s = MainActivity.loadChatName(mContext);
-//					foo += "path:\t"+s+"-> server("+ MainActivity.groupdlistAddress.get(0)+")\n";
-//			}
-
-			cache.tv_path.setText(foo);
-
-		}catch (NullPointerException e){
-        	e.printStackTrace();
+        //// MARK: 16/06/2018 Appends All names collected from the cycle
+		StringBuilder foo = new StringBuilder();
+        if (mes.getUser_record()!=null){
+        	for (String bar : mes.getUser_record()){
+        		foo.append(bar).append("\n");
+			}
 		}
 
+		//// MARK: 16/06/2018 shows the user records in a TextView**
+		cache.tv_path.setText(foo.toString());
 
+		//long clicking on chat name will activate "talkto"
+		// that appends the chat name of user you want to talk to in msg box
         cache.chatName.setOnLongClickListener(new OnLongClickListener() {
 			
 			@Override
@@ -131,6 +121,7 @@ public class ChatAdapter extends BaseAdapter {
 			}
 		});
 
+		//// MARK: 16/06/2018 clicking the chatname once will hide the user records**
         cache.chatName.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

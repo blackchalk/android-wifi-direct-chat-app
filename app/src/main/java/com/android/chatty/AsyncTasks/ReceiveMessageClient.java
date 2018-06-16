@@ -69,7 +69,9 @@ public class ReceiveMessageClient extends AbstractReceiver {
 		if(type==Message.AUDIO_MESSAGE || type==Message.VIDEO_MESSAGE || type==Message.FILE_MESSAGE || type==Message.DRAWING_MESSAGE){
 			values[0].saveByteArrayToFile(mContext);
 		}
-		
+		//// MARK: 16/06/2018 This is the final cycle of tracking our msg. A client receiving a msg from the server.
+		values[0].setUser_record(MainActivity.loadChatName(mContext));
+
 		if(isActivityRunning(MainActivity.class)){
 			ChatActivity.refreshList(values[0], false);
 		}			

@@ -103,29 +103,36 @@
 	        
 	    </RelativeLayout>
 
-		<LinearLayout
-			android:id="@+id/lltrow_path"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:background="@color/gray"
-			android:layout_below="@id/text"
-			android:layout_alignLeft="@+id/text"
-			android:layout_alignStart="@+id/text"
-			android:visibility="visible"
-			android:orientation="vertical">
 
-
-			<TextView
-				android:id="@+id/tvrow_path"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text=""
-				android:textSize="12sp"/>
-
-		</LinearLayout>
-	    
     </RelativeLayout>
 
+<RelativeLayout
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_below="@+id/relativeLayout"
+	android:layout_marginTop="1dp"
+	android:layout_marginStart="10dp"
+	android:layout_marginLeft="10dp"
+	android:layout_marginRight="10dp"
+	android:layout_marginBottom="2dp">
+
+	<LinearLayout
+		android:id="@+id/lltrow_path"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@color/gray"
+		android:visibility="visible"
+		android:orientation="vertical">
+
+		<TextView
+			android:id="@+id/tvrow_path"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text=""
+			android:textSize="12sp"/>
+
+	</LinearLayout>
+</RelativeLayout>
 
     
     <View

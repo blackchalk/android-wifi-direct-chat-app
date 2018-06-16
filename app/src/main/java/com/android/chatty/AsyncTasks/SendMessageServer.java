@@ -33,7 +33,7 @@ public class SendMessageServer extends AsyncTask<Message, Message, Message>{
 	
 	@Override
 	protected Message doInBackground(Message... msg) {
-		Log.v(TAG, "doInBackground");
+//		Log.v(TAG, "doInBackground");
 		
 		//Display le message on the sender before sending it
 		publishProgress(msg);
@@ -41,9 +41,13 @@ public class SendMessageServer extends AsyncTask<Message, Message, Message>{
 		//Send the message to clients
 		try {			
 			ArrayList<InetAddress> listClients = ServerInit.clients;
-			Log.e(TAG, "doInBackground: number of clients: "+ listClients.size() +" ");
+//			Log.e(TAG, "doInBackground: number of clients: "+ listClients.size() +" ");
 			for(InetAddress addr : listClients){
-				
+
+				//// MARK: 16/06/2018 servers send msg to clients, so recording this instance IS necessary
+				// before it leaves server
+				msg[0].setUser_record(MainActivity.loadChatName(mContext));
+
 				if(msg[0].getSenderAddress()!=null && addr.getHostAddress().equals(msg[0].getSenderAddress().getHostAddress())){
 					return msg[0];
 				}			
@@ -51,15 +55,16 @@ public class SendMessageServer extends AsyncTask<Message, Message, Message>{
 				Socket socket = new Socket();
 				socket.setReuseAddress(true);
 				socket.bind(null);
-				Log.e(TAG,"Connect to client: " + addr.getHostAddress());
+//				Log.e(TAG,"Connect to client: " + addr.getHostAddress());
 				socket.connect(new InetSocketAddress(addr, SERVER_PORT));
-				Log.e(TAG, "doInBackground: connect to "+ addr.getHostAddress() +" succeeded");
+
+//				Log.e(TAG, "doInBackground: connect to "+ addr.getHostAddress() +" succeeded");
 
 				OutputStream outputStream = socket.getOutputStream();
 				
 				new ObjectOutputStream(outputStream).writeObject(msg[0]);
 				
-			    Log.e(TAG, "doInBackground: write to "+ addr.getHostAddress() +" succeeded");
+//			    Log.e(TAG, "doInBackground: write to "+ addr.getHostAddress() +" succeeded");
 			    socket.close();
 			}
 			
@@ -81,7 +86,7 @@ public class SendMessageServer extends AsyncTask<Message, Message, Message>{
 
 	@Override
 	protected void onPostExecute(Message result) {
-		Log.v(TAG, "onPostExecute");
+//		Log.v(TAG, "onPostExecute");
 		super.onPostExecute(result);
 	}
 	
