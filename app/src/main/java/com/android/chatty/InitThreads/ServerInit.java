@@ -22,7 +22,7 @@ public class ServerInit extends Thread{
 	@Override
 	public void run() {
 		clients.clear();
-		MainActivity.groupdlistAddress.clear();
+
 		try {
 			serverSocket = new ServerSocket(SERVER_PORT);
 			// Collect client ip's
@@ -30,8 +30,7 @@ public class ServerInit extends Thread{
 		       Socket clientSocket = serverSocket.accept();
 		       if(!clients.contains(clientSocket.getInetAddress())){
 		    	   clients.add(clientSocket.getInetAddress());
-				   MainActivity.groupdlistAddress.add(clientSocket.getInetAddress().getHostAddress());
-		    	   Log.v(TAG, "New client: " + clientSocket.getInetAddress().getHostAddress());
+//		    	   Log.v(TAG, "New client: " + clientSocket.getInetAddress().getHostAddress());
 		       }
 
 		       clientSocket.close();

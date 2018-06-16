@@ -17,13 +17,10 @@ public class ClientInit extends Thread{
 
 	@Override
 	public void run() {
-		MainActivity.groupdlistAddress.clear();
-		MainActivity.groupdlistAddress = new ArrayList<>();
 		Socket socket = new Socket();
 		try {
 			socket.bind(null);
 			socket.connect(new InetSocketAddress(mServerAddr, SERVER_PORT),500);
-			MainActivity.groupdlistAddress.add(mServerAddr.getHostAddress());
 			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();

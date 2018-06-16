@@ -30,7 +30,7 @@ public class SendMessageClient extends AsyncTask<Message, Message, Message>{
 	
 	@Override
 	protected Message doInBackground(Message... msg) {
-		Log.v(TAG, "doInBackground");
+//		Log.v(TAG, "doInBackground");
 		
 		//Display le message on the sender before sending it
 		publishProgress(msg);
@@ -41,13 +41,13 @@ public class SendMessageClient extends AsyncTask<Message, Message, Message>{
 			socket.setReuseAddress(true);
 			socket.bind(null);
 			socket.connect(new InetSocketAddress(mServerAddr, SERVER_PORT));
-			Log.v(TAG, "doInBackground: connect succeeded");
+//			Log.v(TAG, "doInBackground: connect succeeded");
 			
 			OutputStream outputStream = socket.getOutputStream();
 			
 			new ObjectOutputStream(outputStream).writeObject(msg[0]);
 			
-		    Log.v(TAG, "doInBackground: send message succeeded");
+//		    Log.v(TAG, "doInBackground: send message succeeded");
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally{
@@ -76,7 +76,7 @@ public class SendMessageClient extends AsyncTask<Message, Message, Message>{
 
 	@Override
 	protected void onPostExecute(Message result) {
-		Log.v(TAG, "onPostExecute");
+//		Log.v(TAG, "onPostExecute");
 		super.onPostExecute(result);
 	}
 	
