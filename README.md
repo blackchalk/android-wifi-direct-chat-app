@@ -6,3 +6,6 @@ a simple android application using Android device wifi-direct (p2p)
 
 #test link:
 [test](https://drive.google.com/drive/folders/1pchhSSxqVF6453fOGT7kFPLD5ZC2tN0d?usp=sharing)
+
+#TODO:
+1. reskin app
